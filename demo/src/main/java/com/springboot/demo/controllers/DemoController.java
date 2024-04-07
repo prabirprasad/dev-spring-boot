@@ -9,48 +9,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoController {
 
-    private Coach coach;
+    private Coach coach1;
 
-    //Constructor Injection *recommended
     /*
+    // For testing scope type equality
+    private Coach coach2;
+
     @Autowired
-    public DemoController(Coach coach) {
-        this.coach = coach;
+    public DemoController(
+            @Qualifier("cricketCoach") Coach coach1,
+            @Qualifier("cricketCoach") Coach coach2) {
+        this.coach1 = coach1;
+        this.coach2 = coach2;
+    }
+
+    @GetMapping("/check")
+    public String check() {
+        return "Comparing beans coach1 == coach2: " + (coach1  == coach2);
     }
     */
 
-    //Setter Injection
-    /*
+    // SwimCoach doesn't have @Component we configured it using @Bean in SportConfig
     @Autowired
-    public void setCoach(Coach coach) {
-        this.coach = coach;
+    public DemoController(@Qualifier("aquatic") Coach coach1) {
+        this.coach1 = coach1;
     }
-    */
-
-    // Field injection *not recommended
-    /*
-    @Autowired
-    private Coach coach;
-    */
-    // For overcoming multiple Coach implementation
-    // Constructor Injection using Qualifier
-    @Autowired
-    public DemoController(@Qualifier("cricketCoach") Coach coach) {
-        System.out.println("In constructor: " + getClass().getSimpleName());
-        this.coach = coach;
-    }
-
-    // Used @Primary annotation in CricketCoach instead of @Qualifier
-    //Recommended to use @Qualifier
-    /*
-    @Autowired
-    public DemoController(Coach coach) {
-        this.coach = coach;
-    }
-    */
 
     @GetMapping("/dailyworkout")
     public String getDailyWorkout() {
-        return coach.getDailyWorkOut();
+        return coach1.getDailyWorkOut();
     }
+
 }
